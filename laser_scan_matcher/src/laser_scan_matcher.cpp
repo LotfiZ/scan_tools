@@ -116,7 +116,7 @@ LaserScanMatcher::LaserScanMatcher(ros::NodeHandle nh, ros::NodeHandle nh_privat
   if (use_odom_)
   {
     odom_subscriber_ = nh_.subscribe(
-      "odom", 1, &LaserScanMatcher::odomCallback, this);
+      "odom/data", 1, &LaserScanMatcher::odomCallback, this);
   }
   if (use_vel_)
   {
@@ -139,7 +139,7 @@ void LaserScanMatcher::initParams()
   if (!nh_private_.getParam ("base_frame", base_frame_))
     base_frame_ = "base_link";
   if (!nh_private_.getParam ("fixed_frame", fixed_frame_))
-    fixed_frame_ = "world";
+    fixed_frame_ = "map";
 
   // **** input type - laser scan, or point clouds?
   // if false, will subscribe to LaserScan msgs on /scan.
@@ -178,9 +178,9 @@ void LaserScanMatcher::initParams()
   // If more than one is enabled, priority is imu > odom > vel
 
   if (!nh_private_.getParam ("use_imu", use_imu_))
-    use_imu_ = true;
+    use_imu_ = false;
   if (!nh_private_.getParam ("use_odom", use_odom_))
-    use_odom_ = true;
+    use_odom_ = false;
   if (!nh_private_.getParam ("use_vel", use_vel_))
     use_vel_ = false;
 
@@ -199,7 +199,7 @@ void LaserScanMatcher::initParams()
   if (!nh_private_.getParam ("publish_pose", publish_pose_))
     publish_pose_ = true;
   if (!nh_private_.getParam ("publish_pose_stamped", publish_pose_stamped_))
-    publish_pose_stamped_ = false;
+    publish_pose_stamped_ = true;
   if (!nh_private_.getParam ("publish_pose_with_covariance", publish_pose_with_covariance_))
     publish_pose_with_covariance_ = false;
   if (!nh_private_.getParam ("publish_pose_with_covariance_stamped", publish_pose_with_covariance_stamped_))
